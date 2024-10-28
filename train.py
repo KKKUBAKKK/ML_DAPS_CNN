@@ -59,7 +59,7 @@ def train_model(model, train_loader, val_loader, num_epochs=25, learning_rate=0.
         # Validation phase
         val_loss, val_acc = evaluate_model(model, val_loader, criterion, device)
 
-        print(f"Ending epoch {epoch + 1}/{num_epochs} at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}, "
+        print(f"Ending epoch {epoch + 1}/{num_epochs} at {time.strftime('%H:%M:%S', time.localtime())}, "
               f"Train Loss: {epoch_loss:.4f}, Train Acc: {epoch_acc:.4f}, "
               f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
 
