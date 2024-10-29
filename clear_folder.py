@@ -17,9 +17,10 @@ def remove_silence_from_folder(input_folder, min_silence_len=500, silence_thresh
     print(f"All files processed. Cleared files saved in: {output_folder}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Remove silence from an audio files in whole folder.")
-    parser.add_argument("input_path", type=str, help="Path to the input WAV files folder.")
+    # parser = argparse.ArgumentParser(description="Remove silence from an audio files in whole folder.")
+    # parser.add_argument("input_path", type=str, help="Path to the input WAV files folder.")
+    #
+    # args = parser.parse_args()
 
-    args = parser.parse_args()
-
-    remove_silence_from_folder(args.input_path)
+    remove_silence_from_folder('data/class_0')
+    remove_silence_from_folder('data/class_1')
