@@ -15,7 +15,7 @@ def split_wav_files_by_script(source_dir: Path):
     test_dir.mkdir(parents=True, exist_ok=True)
 
     # Iterate over all .wav files in the source directory
-    for wav_file in source_dir.glob("*.png"):
+    for wav_file in source_dir.glob("*.wav"):
         file_name = wav_file.stem
         script_num = int(file_name.split('_')[1][6:])  # Extract script number from file name
 
@@ -30,5 +30,5 @@ def split_wav_files_by_script(source_dir: Path):
 
 if __name__ == "__main__":
     # Usage example
-    source_directory = Path("path/to/clean/audio") # Change this to the path of cleaned audio files
+    source_directory = Path("./daps/data") # Change this to the path of cleaned audio files
     split_wav_files_by_script(source_directory)
