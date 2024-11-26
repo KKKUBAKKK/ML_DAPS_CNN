@@ -13,7 +13,7 @@ TRAIN_AUDIO_PATH = Path("./data/audio/train")
 VALIDATION_AUDIO_PATH = Path("./data/audio/validation")
 TEST_AUDIO_PATH = Path("./data/audio/test")
 
-def process_daps_dataset(dataset_path: Path, output_path: Path):
+def save_spectrograms(dataset_path: Path, output_path: Path):
     audio_files = list(dataset_path.rglob("*.wav"))  # Adjust if your files have a different extension
     print(f"Found {len(audio_files)} files in {dataset_path}")
     print(f"Output path: {output_path.resolve()}")  # Print the resolved output path
@@ -41,8 +41,8 @@ if __name__ == "__main__":
     # process_daps_dataset(TRAIN_AUDIO_PATH / "class_0_cleared_segments", TRAIN_IMG_OUTPUT_PATH / "class_0")
     # process_daps_dataset(TRAIN_AUDIO_PATH / "class_1_cleared_segments", TRAIN_IMG_OUTPUT_PATH / "class_1")
 
-    process_daps_dataset(VALIDATION_AUDIO_PATH / "class_0_cleared_segments", VALIDATION_IMG_OUTPUT_PATH / "class_0")
-    process_daps_dataset(VALIDATION_AUDIO_PATH / "class_1_cleared_segments", VALIDATION_IMG_OUTPUT_PATH / "class_1")
+    save_spectrograms(VALIDATION_AUDIO_PATH / "class_0_cleared_segments", VALIDATION_IMG_OUTPUT_PATH / "class_0")
+    save_spectrograms(VALIDATION_AUDIO_PATH / "class_1_cleared_segments", VALIDATION_IMG_OUTPUT_PATH / "class_1")
 
     # process_daps_dataset(TEST_AUDIO_PATH / "class_0_cleared_segments", TEST_IMG_OUTPUT_PATH / "class_0")
     # process_daps_dataset(TEST_AUDIO_PATH / "class_1_cleared_segments", TEST_IMG_OUTPUT_PATH / "class_1")

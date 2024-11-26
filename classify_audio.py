@@ -2,13 +2,13 @@ import os
 import shutil
 
 
-def organize_audio(input_directory):
+def classify_audio(input_directory, output_directory ='data'):
     # Define the person codes for Class1
     class1_codes = ['f1', 'f7', 'f8', 'm3', 'm6', 'm8']
 
     # Create Class1 and Class0 directories if they don't exist
-    class1_directory = 'data/class_1'
-    class0_directory = 'data/class_0'
+    class1_directory = output_directory + '/class_1'
+    class0_directory = input_directory + '/class_0'
 
     os.makedirs(class1_directory, exist_ok=True)
     os.makedirs(class0_directory, exist_ok=True)

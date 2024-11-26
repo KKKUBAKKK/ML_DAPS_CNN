@@ -1,7 +1,7 @@
 from pathlib import Path
 import shutil
 
-def move_files_to_parent_and_delete_empty_dirs(parent_dir: Path):
+def take_out_from_directories(parent_dir: Path):
     # Iterate through all subdirectories in the parent directory
     for sub_dir in parent_dir.iterdir():
         if sub_dir.is_dir():  # Check if it's a directory
@@ -17,4 +17,4 @@ def move_files_to_parent_and_delete_empty_dirs(parent_dir: Path):
 # Usage example
 if __name__ == "__main__":
     parent_directory = Path("./daps/data")
-    move_files_to_parent_and_delete_empty_dirs(parent_directory)
+    take_out_from_directories(parent_directory)

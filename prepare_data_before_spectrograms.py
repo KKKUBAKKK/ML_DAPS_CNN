@@ -1,5 +1,5 @@
 # dividing for class_0 and class_1
-from classify_audio import organize_audio
+from classify_audio import classify_audio
 
 # organize_audio("data/clean")
 # organize_audio("data/ipad_balcony1")
@@ -17,16 +17,16 @@ from classify_audio import organize_audio
 
 
 # removing silence from folders data/class_0 and data/class_1
-from clear_folder import remove_silence_from_folder
+from remove_silence_from_directory import remove_silence_from_directory
 
-remove_silence_from_folder('./daps/data/test/class_0')
-remove_silence_from_folder('./daps/data/test/class_1')
+remove_silence_from_directory('./daps/data/audio/test/class_0')
+remove_silence_from_directory('./daps/data/audio/test/class_1')
 
-remove_silence_from_folder('./daps/data/train/class_0')
-remove_silence_from_folder('./daps/data/train/class_1')
+remove_silence_from_directory('./daps/data/audio/train/class_0')
+remove_silence_from_directory('./daps/data/audio/train/class_1')
 
-remove_silence_from_folder('./daps/data/validation/class_0')
-remove_silence_from_folder('./daps/data/validation/class_1')
+remove_silence_from_directory('./daps/data/audio/validation/class_0')
+remove_silence_from_directory('./daps/data/audio/validation/class_1')
 
 # splitting cleared files into 3s segments
 from split_all_files import split_all_files

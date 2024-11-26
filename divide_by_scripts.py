@@ -3,7 +3,7 @@ from pathlib import Path
 from shutil import move
 
 
-def split_wav_files_by_script(source_dir: Path):
+def divide_by_scripts(source_dir: Path):
     # Define the directories within source_dir
     train_dir = source_dir / "train"
     val_dir = source_dir / "validation"
@@ -31,4 +31,4 @@ def split_wav_files_by_script(source_dir: Path):
 if __name__ == "__main__":
     # Usage example
     source_directory = Path("./daps/data") # Change this to the path of cleaned audio files
-    split_wav_files_by_script(source_directory)
+    divide_by_scripts(source_directory)
