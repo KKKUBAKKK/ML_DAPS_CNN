@@ -1,3 +1,7 @@
+# here you have to do
+# pip install pydub
+# before (unless you already have it installed)
+
 from pydub import AudioSegment
 import os
 
