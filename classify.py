@@ -7,8 +7,8 @@ def organize_images(input_directory):
     class1_codes = ['f1', 'f7', 'f8', 'm3', 'm6', 'm8']
 
     # Create Class1 and Class0 directories if they don't exist
-    class1_directory = os.path.join(input_directory, 'Class1')
-    class0_directory = os.path.join(input_directory, 'Class0')
+    class1_directory = os.path.join(input_directory, 'class_1')
+    class0_directory = os.path.join(input_directory, 'class_0')
 
     os.makedirs(class1_directory, exist_ok=True)
     os.makedirs(class0_directory, exist_ok=True)
@@ -16,7 +16,7 @@ def organize_images(input_directory):
     # Loop through each file in the input directory
     i = 1
     for filename in os.listdir(input_directory):
-        if filename.endswith('.png'):
+        if filename.endswith('.wav'):
             # Extract the person code from the filename
             person_code = filename.split('_')[0]  # Get the first part of the filename
 
@@ -34,6 +34,6 @@ def organize_images(input_directory):
             i += 1
 
 if __name__ == "__main__":
-    organize_images("spectrograms/train")
-    # organize_images("spectrograms/validation")
-    # organize_images("spectrograms/test")
+    organize_images("./daps/data/train")
+    organize_images("./daps/data/validation")
+    organize_images("./daps/data/test")

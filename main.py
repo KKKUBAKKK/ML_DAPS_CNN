@@ -48,5 +48,5 @@ def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, mod
 
 # Call the main function with your dataset path
 if __name__ == "__main__":
-    data_dir = Path("./spectrograms")  # Update this to your dataset path
-    main(False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="spectrogram_cnn_best.pth")
+    data_dir = Path("./data/spectrograms")  # Update this to your dataset path
+    main(False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="new_best_daps_cnn.pth")

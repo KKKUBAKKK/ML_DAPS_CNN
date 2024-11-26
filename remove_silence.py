@@ -4,7 +4,27 @@ from pydub import AudioSegment
 from pydub.silence import split_on_silence
 import os
 
-def remove_silence(input_file, min_silence_len=500, silence_thresh=-40):
+# def remove_silence(input_file, output_file, min_silence_len=500, silence_thresh=-40):
+#     print("Loading the audio file...")
+#     audio = AudioSegment.from_wav(input_file)
+#
+#     print("Splitting the audio based on silence...")
+#     chunks = split_on_silence(audio, min_silence_len=min_silence_len, silence_thresh=silence_thresh)
+#
+#     print("Concatenating non-silent chunks...")
+#     output = AudioSegment.empty()
+#     for chunk in chunks:
+#         output += chunk
+#
+#     # Generating the output filename based on input filename
+#     base, ext = os.path.splitext(input_file)
+#     output_file = f"{base}_cleared{ext}"
+#
+#     print("Saving the audio file without silent parts...")
+#     output.export(output_file, format="wav")
+#     print("Done!")
+
+def remove_silence(input_file, output_file, min_silence_len=500, silence_thresh=-40):
     print("Loading the audio file...")
     audio = AudioSegment.from_wav(input_file)
 
@@ -16,11 +36,7 @@ def remove_silence(input_file, min_silence_len=500, silence_thresh=-40):
     for chunk in chunks:
         output += chunk
 
-    # Generating the output filename based on input filename
-    base, ext = os.path.splitext(input_file)
-    output_file = f"{base}_cleared{ext}"
-
-    print("Saving the audio file without silent parts...")
+    print("Saving the audio file without silence parts...")
     output.export(output_file, format="wav")
     print("Done!")
 

@@ -4,6 +4,9 @@ import torch.optim as optim
 import torch.nn as nn
 import torch
 
+from sklearn.metrics import f1_score
+
+
 MODEL_PATH = "./model.pth"
 LAST_MODEL_PATH = "./last_model.pth"
 
@@ -59,7 +62,7 @@ def train_model(model, train_loader, val_loader, num_epochs=25, learning_rate=0.
         # Validation phase
         val_loss, val_acc = evaluate_model(model, val_loader, criterion, device)
 
-        print(f"Ending epoch {epoch + 1}/{num_epochs} at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}, "
+        print(f"Ending epoch {epoch + 1}/{num_epochs} at {time.strftime('%H:%M:%S', time.localtime())}, "
               f"Train Loss: {epoch_loss:.4f}, Train Acc: {epoch_acc:.4f}, "
               f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
 
@@ -77,6 +80,8 @@ def evaluate_model(model, data_loader, criterion, device):
     running_loss = 0.0
     correct = 0
     total = 0
+    all_labels = []
+    all_predictions = []
 
     with torch.no_grad():  # Disable gradient computation during evaluation
         for inputs, labels in data_loader:
@@ -87,11 +92,20 @@ def evaluate_model(model, data_loader, criterion, device):
 
             running_loss += loss.item() * inputs.size(0)
             _, predicted = torch.max(outputs, 1)
+
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
+            # Collect predictions and labels for F1 score calculation
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(predicted.cpu().numpy())
+
     epoch_loss = running_loss / len(data_loader.dataset)
     epoch_acc = correct / total
+
+    # Calculate F1 score
+    f1 = f1_score(all_labels, all_predictions, average="weighted")  # Change "weighted" if you need macro or micro F1 score
+    print(f"F1 Score: {f1:.4f}")
 
     return epoch_loss, epoch_acc
 

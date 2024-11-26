@@ -3,8 +3,9 @@ import librosa
 import librosa.display
 import numpy as np
 import matplotlib.pyplot as plt
+import soundfile as sf
 
-IMG_OUTPUT_PATH = Path("img")
+IMG_OUTPUT_PATH = Path("./test_spectrograms")
 SAVE_PARAMS = {"dpi": 300, "bbox_inches": "tight", "transparent": True}
 
 TICKS = np.array([31.25, 62.5, 125, 250, 500, 1000, 2000, 4000, 8000])
@@ -37,10 +38,18 @@ def plot_spectrogram_and_save(signal, fs, output_path: Path, fft_size=2048, hop_
         hop_length=hop_size,
         cmap="inferno",
     )
-    plt.xlabel("Time [s]")
-    plt.ylabel("Frequency [Hz]")
-    plt.yticks(TICKS, TICK_LABELS)
-    plt.colorbar(img, format="%+2.f dBFS")
+    # plt.xlabel("Time [s]")
+    # plt.ylabel("Frequency [Hz]")
+    # plt.yticks(TICKS, TICK_LABELS)
+    # plt.colorbar(img, format="%+2.f dBFS")
+
+    # Remove axes
+    plt.gca().set_axis_off()
+    plt.subplots_adjust(top=1, bottom=0, right=1, left=0,
+                        hspace=0, wspace=0)
+    plt.margins(0, 0)
+    plt.gca().xaxis.set_major_locator(plt.NullLocator())
+    plt.gca().yaxis.set_major_locator(plt.NullLocator())
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output_path, **SAVE_PARAMS)
@@ -54,15 +63,17 @@ def plot_spectrogram_and_save(signal, fs, output_path: Path, fft_size=2048, hop_
     # print(f"Saved spectrogram to {output_path}")
 
 
-# def process_daps_dataset(dataset_path: Path):
-#     audio_files = list(dataset_path.glob("**/*.flac"))  # Adjust if your files have a different extension
-#     for audio_file in audio_files:
-#         signal, sample_rate = sf.read(audio_file)
-#         print(f"Processing {audio_file} with sample rate: {sample_rate}")
-#         output_image_path = IMG_OUTPUT_PATH / audio_file.stem
-#         plot_spectrogram_and_save(signal, sample_rate, output_image_path)
-#
-#
-# if __name__ == "__main__":
-#     dataset_path = Path("path_to_daps_dataset")  # Replace with the correct path to DAPS dataset
-#     process_daps_dataset(dataset_path)
+def process_daps_dataset(dataset_path: Path):
+    audio_files = list(dataset_path.glob("**/*.wav"))  # Adjust if your files have a different extension
+    for audio_file in audio_files:
+        signal, sample_rate = sf.read(audio_file)
+        print(f"Processing {audio_file} with sample rate: {sample_rate}")
+        output_image_path = IMG_OUTPUT_PATH / audio_file.stem
+        plot_spectrogram_and_save(signal, sample_rate, output_image_path)
+        break;
+
+
+# Just for testing
+if __name__ == "__main__":
+    dataset_path = Path("./daps/data/clean")  # Replace with the correct path to DAPS dataset
+    process_daps_dataset(dataset_path)
