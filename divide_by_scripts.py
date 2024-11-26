@@ -3,16 +3,11 @@ from pathlib import Path
 from shutil import move
 
 
-def divide_by_scripts(source_dir: Path):
+def divide_by_scripts(dest_dir, source_dir):
     # Define the directories within source_dir
-    train_dir = source_dir / "train"
-    val_dir = source_dir / "validation"
-    test_dir = source_dir / "test"
-
-    # Create the directories if they don't exist
-    train_dir.mkdir(parents=True, exist_ok=True)
-    val_dir.mkdir(parents=True, exist_ok=True)
-    test_dir.mkdir(parents=True, exist_ok=True)
+    train_dir = dest_dir / "train"
+    val_dir = dest_dir / "validation"
+    test_dir = dest_dir / "test"
 
     # Iterate over all .wav files in the source directory
     for wav_file in source_dir.glob("*.wav"):
@@ -27,6 +22,7 @@ def divide_by_scripts(source_dir: Path):
         elif script_num == 5:
             move(wav_file, test_dir / wav_file.name)
 
+    source_dir.rmdir()
 
 if __name__ == "__main__":
     # Usage example
