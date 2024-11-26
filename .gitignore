@@ -5,3 +5,6 @@
 /points.txt
 /data/
 /new_best_daps_cnn.pth
+
+.DS_Store
+__pycache__/
