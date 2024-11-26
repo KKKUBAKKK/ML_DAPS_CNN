@@ -1,4 +1,4 @@
-# Project Title
+# ML_DAPS_CNN
 
 This project uses the DAPS dataset to teach a CNN how to classify audio files.
 It classifies the audio files into 2 classes 0 and 1. The aim is that it should
