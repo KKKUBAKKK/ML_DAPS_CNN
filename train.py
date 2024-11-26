@@ -4,6 +4,9 @@ import torch.optim as optim
 import torch.nn as nn
 import torch
 
+from sklearn.metrics import f1_score
+
+
 MODEL_PATH = "./model.pth"
 LAST_MODEL_PATH = "./last_model.pth"
 
@@ -77,6 +80,8 @@ def evaluate_model(model, data_loader, criterion, device):
     running_loss = 0.0
     correct = 0
     total = 0
+    all_labels = []
+    all_predictions = []
 
     with torch.no_grad():  # Disable gradient computation during evaluation
         for inputs, labels in data_loader:
@@ -87,11 +92,20 @@ def evaluate_model(model, data_loader, criterion, device):
 
             running_loss += loss.item() * inputs.size(0)
             _, predicted = torch.max(outputs, 1)
+
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
+            # Collect predictions and labels for F1 score calculation
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(predicted.cpu().numpy())
+
     epoch_loss = running_loss / len(data_loader.dataset)
     epoch_acc = correct / total
+
+    # Calculate F1 score
+    f1 = f1_score(all_labels, all_predictions, average="weighted")  # Change "weighted" if you need macro or micro F1 score
+    print(f"F1 Score: {f1:.4f}")
 
     return epoch_loss, epoch_acc
 
