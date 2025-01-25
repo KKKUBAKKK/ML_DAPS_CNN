@@ -7,7 +7,7 @@ from train import train_model, evaluate_model, mc_dropout_predictions, plot_unce
 import numpy as np
 
 # Main function to train, evaluate, and save the model
-def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="model.pth"):
+def main(train, evaluate, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="model.pth"):
     # Prepare data loaders (from previous steps)
     train_loader, val_loader, test_loader = create_dataloaders(data_dir, batch_size=batch_size)
 
@@ -42,19 +42,29 @@ def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, mod
     num_samples = 2  # Liczba próbek Monte Carlo
     print("Starting Monte Carlo Dropout evaluation...")
     predictions = mc_dropout_predictions(model, test_loader, num_samples, device)
+    # Print size of predictions
+    # print("Predictions shape:", predictions.shape)
 
     # Oblicz średnią i wariancję
-    predictions_mean = np.mean(predictions, axis=0)  # Średnie prawdopodobieństwo dla każdej klasy
-    predictions_uncertainty = np.var(predictions, axis=0)  # Wariancja jako miara niepewności
+    temp_mean = np.mean(predictions, axis=0)
+    temp_uncertainty = np.var(predictions, axis=0)
+    temp2_mean = np.mean(temp_mean, axis=0)
+    temp2_uncertainty = np.var(temp_uncertainty, axis=0)
+    predictions_mean = np.mean(temp2_mean, axis=0)  # Średnie prawdopodobieństwo dla każdej klasy
+    predictions_uncertainty = np.var(temp2_uncertainty, axis=0)  # Wariancja jako miara niepewności
+    # Print mean and uncertainty sizes
+    # print("Mean shape:", predictions_mean.shape)
+    # print("Uncertainty shape:", predictions_uncertainty.shape)
 
     plot_uncertainty(predictions_mean, predictions_uncertainty)
 
-    # Evaluate on the test set
-    print("Evaluating on test set...")
-    criterion = nn.CrossEntropyLoss()
+    if evaluate:
+        # Evaluate on the test set
+        print("Evaluating on test set...")
+        criterion = nn.CrossEntropyLoss()
 
-    test_loss, test_acc = evaluate_model(model, test_loader, criterion, device)
-    print(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.4f}")
+        test_loss, test_acc = evaluate_model(model, test_loader, criterion, device)
+        print(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.4f}")
 
     # ensemble_models = [SpectrogramCNN(num_classes=2) for _ in range(5)]
     # train_ensemble(ensemble_models, train_loader, val_loader, num_epochs=25, learning_rate=0.001)
@@ -68,4 +78,4 @@ def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, mod
 # Call the main function with your dataset path
 if __name__ == "__main__":
     data_dir = Path("./data/spectrograms")  # Update this to your dataset path
-    main(False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="best_cnn.pth")
+    main(False, False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="best_cnn.pth")

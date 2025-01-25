@@ -116,37 +116,29 @@ def mc_dropout_predictions(model, data_loader, num_samples, device):
     all_predictions = []
 
     with torch.no_grad():
-        print("Starting Monte Carlo Dropout evaluation...")
-        for inputs, _ in data_loader:
-            print(f"Batch {len(all_predictions) + 1}/{len(data_loader)}")
+        for batch_idx, (inputs, _) in enumerate(data_loader):
+            if batch_idx == 254:
+                break
             inputs = inputs.to(device)
+            print(f"Processing batch {batch_idx + 1}...")  # Informacja o batchu
 
             # Wykonaj wielokrotne predykcje z aktywnym dropoutem
             predictions = []
-            for _ in range(num_samples):
-                print(f"Sample {_ + 1}/{num_samples}")
+            for sample_idx in range(num_samples):
                 outputs = torch.softmax(model(inputs), dim=1)
+                print(f"Sample {sample_idx + 1}: outputs shape = {outputs.shape}")  # Sprawdź kształt wyjścia
+                # Don't add this output if size is not 32,2
+                # if outputs.shape != (32, 2):
+                #     continue
+
+                # assert num_classes == 2, "Number of classes is inconsistent!"  # Sprawdź, czy liczba klas jest stała
                 predictions.append(outputs.cpu().numpy())
 
-            predictions = np.array(predictions)  # shape: (num_samples, batch_size, num_classes)
+            predictions = np.array(predictions)
+            print(f"Batch {batch_idx + 1}: predictions shape = {predictions.shape}")  # Kształt wyników dla batcha
             all_predictions.append(predictions)
 
-    print("Monte Carlo Dropout evaluation complete.")
-    return all_predictions  # Zwraca predykcje dla każdego przykładu
-
-
-def train_ensemble(models, train_loader, val_loader, num_epochs=25, learning_rate=0.001):
-    for model in models:
-        train_model(model, train_loader, val_loader, num_epochs=num_epochs, learning_rate=learning_rate)
-
-def ensemble_predictions(models, inputs):
-    outputs = []
-    with torch.no_grad():
-        for model in models:
-            outputs.append(model(inputs))
-    return torch.stack(outputs)
-# Example: Train the model
-# train_model(model, train_loader, val_loader, num_epochs=10, learning_rate=0.001)
+    return all_predictions
 
 
 import matplotlib.pyplot as plt
