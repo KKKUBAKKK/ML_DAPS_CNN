@@ -3,6 +3,7 @@ import time
 import torch.optim as optim
 import torch.nn as nn
 import torch
+import numpy as np
 
 from sklearn.metrics import f1_score
 
@@ -76,7 +77,7 @@ def train_model(model, train_loader, val_loader, num_epochs=25, learning_rate=0.
 
 
 def evaluate_model(model, data_loader, criterion, device):
-    model.eval()  # Set the model to evaluation mode
+    model.train()  # Set the model to evaluation mode
     running_loss = 0.0
     correct = 0
     total = 0
@@ -110,5 +111,52 @@ def evaluate_model(model, data_loader, criterion, device):
     return epoch_loss, epoch_acc
 
 
+def mc_dropout_predictions(model, data_loader, num_samples, device):
+    model.train()  # Aktywuj dropout
+    all_predictions = []
+
+    with torch.no_grad():
+        print("Starting Monte Carlo Dropout evaluation...")
+        for inputs, _ in data_loader:
+            print(f"Batch {len(all_predictions) + 1}/{len(data_loader)}")
+            inputs = inputs.to(device)
+
+            # Wykonaj wielokrotne predykcje z aktywnym dropoutem
+            predictions = []
+            for _ in range(num_samples):
+                print(f"Sample {_ + 1}/{num_samples}")
+                outputs = torch.softmax(model(inputs), dim=1)
+                predictions.append(outputs.cpu().numpy())
+
+            predictions = np.array(predictions)  # shape: (num_samples, batch_size, num_classes)
+            all_predictions.append(predictions)
+
+    print("Monte Carlo Dropout evaluation complete.")
+    return all_predictions  # Zwraca predykcje dla każdego przykładu
+
+
+def train_ensemble(models, train_loader, val_loader, num_epochs=25, learning_rate=0.001):
+    for model in models:
+        train_model(model, train_loader, val_loader, num_epochs=num_epochs, learning_rate=learning_rate)
+
+def ensemble_predictions(models, inputs):
+    outputs = []
+    with torch.no_grad():
+        for model in models:
+            outputs.append(model(inputs))
+    return torch.stack(outputs)
 # Example: Train the model
 # train_model(model, train_loader, val_loader, num_epochs=10, learning_rate=0.001)
+
+
+import matplotlib.pyplot as plt
+
+def plot_uncertainty(mean, uncertainty):
+    plt.figure(figsize=(10, 5))
+    plt.bar(range(len(mean)), mean, yerr=uncertainty, alpha=0.7, capsize=4)
+    plt.xlabel('Class')
+    plt.ylabel('Prediction probability')
+    plt.title('Uncertainty estimation with Monte Carlo Dropout')
+    plt.show()
+
+# plot_uncertainty(predictions_mean[0], predictions_uncertainty[0])  # Przykład dla jednego elementu

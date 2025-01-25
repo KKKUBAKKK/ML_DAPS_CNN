@@ -3,7 +3,8 @@ import torch.nn as nn
 from pathlib import Path
 from dataset import create_dataloaders
 from cnn import SpectrogramCNN
-from train import train_model, evaluate_model
+from train import train_model, evaluate_model, mc_dropout_predictions, plot_uncertainty
+import numpy as np
 
 # Main function to train, evaluate, and save the model
 def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="model.pth"):
@@ -38,6 +39,16 @@ def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, mod
     model.load_state_dict(torch.load(model_save_path, weights_only=True))
     print(f"Best model loaded from {model_save_path}")
 
+    num_samples = 2  # Liczba próbek Monte Carlo
+    print("Starting Monte Carlo Dropout evaluation...")
+    predictions = mc_dropout_predictions(model, test_loader, num_samples, device)
+
+    # Oblicz średnią i wariancję
+    predictions_mean = np.mean(predictions, axis=0)  # Średnie prawdopodobieństwo dla każdej klasy
+    predictions_uncertainty = np.var(predictions, axis=0)  # Wariancja jako miara niepewności
+
+    plot_uncertainty(predictions_mean, predictions_uncertainty)
+
     # Evaluate on the test set
     print("Evaluating on test set...")
     criterion = nn.CrossEntropyLoss()
@@ -45,8 +56,16 @@ def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, mod
     test_loss, test_acc = evaluate_model(model, test_loader, criterion, device)
     print(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.4f}")
 
+    # ensemble_models = [SpectrogramCNN(num_classes=2) for _ in range(5)]
+    # train_ensemble(ensemble_models, train_loader, val_loader, num_epochs=25, learning_rate=0.001)
+    # ensemble_outputs = ensemble_predictions(ensemble_models, inputs)
+    # ensemble_mean = ensemble_outputs.mean(dim=0)
+    # ensemble_std = ensemble_outputs.std(dim=0)
+    # print("Ensemble Mean:", ensemble_mean)
+    # print("Ensemble Std Dev:", ensemble_std)
+
 
 # Call the main function with your dataset path
 if __name__ == "__main__":
     data_dir = Path("./data/spectrograms")  # Update this to your dataset path
-    main(True, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="new_best_daps_cnn.pth")
+    main(False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="best_cnn.pth")
