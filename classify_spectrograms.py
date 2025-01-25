@@ -5,7 +5,7 @@ import random
 # Ustawienia ścieżek
 base_dir = "spectrograms"
 output_dir = "spectrograms"
-categories = ["class_0", "class_1"]
+categories = ["Class0", "Class1"]
 splits = {"train": 0.6, "validation": 0.2, "test": 0.2}
 
 # Funkcja do tworzenia struktury folderów

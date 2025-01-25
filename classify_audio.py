@@ -7,8 +7,8 @@ def organize_audio(input_directory):
     class1_codes = ['f1', 'f7', 'f8', 'm3', 'm6', 'm8']
 
     # Create Class1 and Class0 directories if they don't exist
-    class1_directory = 'data/class_1'
-    class0_directory = 'data/class_0'
+    class1_directory = 'data/Class1'
+    class0_directory = 'data/Class0'
 
     os.makedirs(class1_directory, exist_ok=True)
     os.makedirs(class0_directory, exist_ok=True)

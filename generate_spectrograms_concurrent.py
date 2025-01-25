@@ -46,4 +46,4 @@ def generate_spectrograms_for_all_folders(base_input_folder, base_output_folder)
 
 # Example usage
 if __name__ == "__main__":
-    generate_spectrograms_for_all_folders("data/class_0_cleared_segments", "spectrograms/class_0")
+    generate_spectrograms_for_all_folders("data/class_0_cleared_segments", "spectrograms/Class0")

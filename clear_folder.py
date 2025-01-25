@@ -22,5 +22,5 @@ if __name__ == "__main__":
     #
     # args = parser.parse_args()
 
-    remove_silence_from_folder('data/class_0')
-    remove_silence_from_folder('data/class_1')
+    remove_silence_from_folder('data/Class0')
+    remove_silence_from_folder('data/Class1')
