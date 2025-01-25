@@ -1,3 +1,5 @@
+import threading
+
 import soundfile as sf
 import librosa
 from pathlib import Path
@@ -12,7 +14,7 @@ def remove_noise_from_directory(input_dir, output_dir, noise_clip_length=1.0,
     # Iterate through all files in the input directory
     for audio_file in input_dir.rglob("*.wav"):
         # Remove noise from each audio file
-        remove_noise_from_wav(audio_file, output_dir, noise_clip_length,
+        remove_noise_from_wav(audio_file, output_dir / audio_file.name, noise_clip_length,
                               noise_reduction_type, prop_decrease)
 
 
@@ -86,23 +88,41 @@ def remove_noise_from_wav(input_file, output_file=None,
     # Determine output filename
     if output_file is None:
         output_file = input_file.rsplit('.', 1)[0] + '_denoised.wav'
-    elif not output_file.endswith('.wav'):
-        output_file += Path(output_file).stem + '_denoised.wav'
+    # elif output_file.suffix == '.wav':
+    #     output_file = output_file.with_stem(output_file.stem + '_denoised')
 
     # Save the processed audio
     sf.write(output_file, reduced_audio, sample_rate)
+
+    print(f"Saved denoised audio to: {output_file}")
 
     return reduced_audio
 
 
 # Example usage for single audio file
 if __name__ == "__main__":
-    input_file = 'data/audio/train/class_0_cleared_segments/f2_script1_iphone_balcony1_3.wav'
-    output_audio = 'data/noise_test.wav'
-    output_spectrogram = 'data/noise_test.png'
-    reduced_audio = remove_noise_from_wav(
-        input_file, output_audio)
-    print("Noise reduction complete.")
-    signal, sample_rate = sf.read(output_audio)
-    plot_spectrogram_and_save(signal, sample_rate, Path(output_spectrogram))
-    print("Spectrogram saved.")
+    input_dir = Path('./data/audio')
+    output_dir = Path('./data/audio_denoised')
+    # train0thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'train' / 'class_0', output_dir / 'train' / 'class_0'))
+    train1thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'train' / 'class_1', output_dir / 'train' / 'class_1'))
+    validate0thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'validation' / 'class_0', output_dir / 'validation' / 'class_0'))
+    validate1thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'validation' / 'class_1', output_dir / 'validation' / 'class_1'))
+    test0thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'test' / 'class_0', output_dir / 'test' / 'class_0'))
+    test1thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'test' / 'class_1', output_dir / 'test' / 'class_1'))
+
+    # train0thread.start()
+    train1thread.start()
+    validate0thread.start()
+    validate1thread.start()
+    test0thread.start()
+    test1thread.start()
+
+    # train0thread.join()
+    train1thread.join()
+    print("Train done")
+    validate0thread.join()
+    validate1thread.join()
+    print("Validation done")
+    test0thread.join()
+    test1thread.join()
+    print("Test done")

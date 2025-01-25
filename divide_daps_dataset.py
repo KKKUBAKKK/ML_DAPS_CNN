@@ -46,5 +46,5 @@ if __name__ == "__main__":
     # Usage example
     dataset_path = Path("daps")  # Replace with actual dataset path
     output_base_path = Path('data/audio')  # Output directory for splits
-    divide_daps_dataset(dataset_path, output_base_path, copy=True)
+    divide_daps_dataset(dataset_path, output_base_path, copy=False)
 
