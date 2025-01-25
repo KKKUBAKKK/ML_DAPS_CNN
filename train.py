@@ -26,6 +26,8 @@ def train_model(model, train_loader, val_loader, num_epochs=25, learning_rate=0.
 
     model.to(device)
 
+    initial_params = {name: param.clone().detach() for name, param in model.named_parameters()}
+
     # Training loop
     best_val_acc = 0.0
     for epoch in range(num_epochs):
@@ -62,6 +64,10 @@ def train_model(model, train_loader, val_loader, num_epochs=25, learning_rate=0.
         print(f"Ending epoch {epoch + 1}/{num_epochs} at {time.strftime('%H:%M:%S', time.localtime())}, "
               f"Train Loss: {epoch_loss:.4f}, Train Acc: {epoch_acc:.4f}, "
               f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
+
+        for name, param in model.named_parameters():
+            param_change = torch.norm(param - initial_params[name]).item()
+            print(f"Epoch {epoch + 1}, Layer {name}, Parameter Change: {param_change:.4f}")
 
         # Save the best model based on validation accuracy
         if val_acc > best_val_acc:
