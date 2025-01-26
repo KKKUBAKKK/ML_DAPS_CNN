@@ -77,7 +77,7 @@ def train_model(model, train_loader, val_loader, num_epochs=25, learning_rate=0.
 
 
 def evaluate_model(model, data_loader, criterion, device):
-    model.train()  # Set the model to evaluation mode
+    model.eval()  # Set the model to evaluation mode
     running_loss = 0.0
     correct = 0
     total = 0
@@ -109,46 +109,3 @@ def evaluate_model(model, data_loader, criterion, device):
     print(f"F1 Score: {f1:.4f}")
 
     return epoch_loss, epoch_acc
-
-
-def mc_dropout_predictions(model, data_loader, num_samples, device):
-    model.train()  # Aktywuj dropout
-    all_predictions = []
-
-    with torch.no_grad():
-        for batch_idx, (inputs, _) in enumerate(data_loader):
-            if batch_idx == 254:
-                break
-            inputs = inputs.to(device)
-            print(f"Processing batch {batch_idx + 1}...")  # Informacja o batchu
-
-            # Wykonaj wielokrotne predykcje z aktywnym dropoutem
-            predictions = []
-            for sample_idx in range(num_samples):
-                outputs = torch.softmax(model(inputs), dim=1)
-                print(f"Sample {sample_idx + 1}: outputs shape = {outputs.shape}")  # Sprawdź kształt wyjścia
-                # Don't add this output if size is not 32,2
-                # if outputs.shape != (32, 2):
-                #     continue
-
-                # assert num_classes == 2, "Number of classes is inconsistent!"  # Sprawdź, czy liczba klas jest stała
-                predictions.append(outputs.cpu().numpy())
-
-            predictions = np.array(predictions)
-            print(f"Batch {batch_idx + 1}: predictions shape = {predictions.shape}")  # Kształt wyników dla batcha
-            all_predictions.append(predictions)
-
-    return all_predictions
-
-
-import matplotlib.pyplot as plt
-
-def plot_uncertainty(mean, uncertainty):
-    plt.figure(figsize=(10, 5))
-    plt.bar(range(len(mean)), mean, yerr=uncertainty, alpha=0.7, capsize=4)
-    plt.xlabel('Class')
-    plt.ylabel('Prediction probability')
-    plt.title('Uncertainty estimation with Monte Carlo Dropout')
-    plt.show()
-
-# plot_uncertainty(predictions_mean[0], predictions_uncertainty[0])  # Przykład dla jednego elementu

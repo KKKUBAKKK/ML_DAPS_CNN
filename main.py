@@ -39,24 +39,8 @@ def main(train, evaluate, data_dir, num_epochs=25, batch_size=32, learning_rate=
     model.load_state_dict(torch.load(model_save_path, weights_only=True))
     print(f"Best model loaded from {model_save_path}")
 
-    num_samples = 2  # Liczba próbek Monte Carlo
+    num_samples = 2  # Liczba próbek Monte Carlo (samples powinno byc [10 - 20]), dropout powinien byc w [0.2 - 0.5]
     print("Starting Monte Carlo Dropout evaluation...")
-    predictions = mc_dropout_predictions(model, test_loader, num_samples, device)
-    # Print size of predictions
-    # print("Predictions shape:", predictions.shape)
-
-    # Oblicz średnią i wariancję
-    temp_mean = np.mean(predictions, axis=0)
-    temp_uncertainty = np.var(predictions, axis=0)
-    temp2_mean = np.mean(temp_mean, axis=0)
-    temp2_uncertainty = np.var(temp_uncertainty, axis=0)
-    predictions_mean = np.mean(temp2_mean, axis=0)  # Średnie prawdopodobieństwo dla każdej klasy
-    predictions_uncertainty = np.var(temp2_uncertainty, axis=0)  # Wariancja jako miara niepewności
-    # Print mean and uncertainty sizes
-    # print("Mean shape:", predictions_mean.shape)
-    # print("Uncertainty shape:", predictions_uncertainty.shape)
-
-    plot_uncertainty(predictions_mean, predictions_uncertainty)
 
     if evaluate:
         # Evaluate on the test set
@@ -73,6 +57,9 @@ def main(train, evaluate, data_dir, num_epochs=25, batch_size=32, learning_rate=
     # ensemble_std = ensemble_outputs.std(dim=0)
     # print("Ensemble Mean:", ensemble_mean)
     # print("Ensemble Std Dev:", ensemble_std)
+
+
+# Function for creating plots for monte carlo task
 
 
 # Call the main function with your dataset path

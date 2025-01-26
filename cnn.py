@@ -37,23 +37,3 @@ class SpectrogramCNN(nn.Module):
         x = self.fc2(x)  # Output: (batch_size, num_classes)
 
         return x
-
-
-    def enable_dropout(self):
-        for module in self.modules():
-            if isinstance(module, nn.Dropout):
-                module.train()
-
-
-def monte_carlo_dropout(model, inputs, num_samples=50):
-    model.enable_dropout()
-    model.eval()
-    outputs = []
-    with torch.no_grad():
-        for _ in range(num_samples):
-            outputs.append(model(inputs))
-    return torch.stack(outputs)
-
-# Example: Initialize the CNN
-# model = SpectrogramCNN(num_classes=2)
-# print(model)
