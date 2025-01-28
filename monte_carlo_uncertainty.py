@@ -9,21 +9,7 @@ from cnn import SpectrogramCNN
 from dataset import create_dataloaders
 import torch.nn.functional as F
 
-# Original code
-# def monte_carlo_dropout(model, input_data, forward_passes=10):
-#     model.train()  # Enable dropout during inference
-#     outputs = []
-#
-#     for _ in range(forward_passes):
-#         outputs.append(model(input_data).unsqueeze(0))
-#
-#     outputs = torch.cat(outputs, dim=0)
-#     mean_output = outputs.mean(dim=0)
-#     variance_output = outputs.var(dim=0)
-#
-#     return mean_output, variance_output
 
-# Modified code
 def monte_carlo_dropout(model, data_loader, forward_passes=10, device="cpu"):
     model.train()  # Enable dropout during inference
     outputs = []
@@ -155,34 +141,5 @@ if __name__ == "__main__":
     device_str = "mps" if device == torch.device("mps") else "cpu"
     all_mean_probs, all_std_probs, all_labels = evaluate_with_mcdropout(model, test_loader, num_samples=50, device=device_str)
     torch.save({'mean_probs': all_mean_probs, 'std_probs': all_std_probs, 'labels': all_labels},'mc_dropout_results.pth')
-
-
-    # Loading example
-    # results = torch.load('mc_dropout_results.pth')
-    # all_mean_probs = results['mean_probs']
-    # all_std_probs = results['std_probs']
-    # all_labels = results['labels']
-
-    # # Get uncertainty estimates with Monte Carlo Dropout
-    # print("Starting Monte Carlo Dropout evaluation...")
-    # mean, variance = monte_carlo_dropout(model, test_loader, forward_passes=2, device=device)
-    # print("Monte Carlo Dropout evaluation complete.")
-    #
-    # # print("Mean predictions: ", mean)
-    # # print("Variance (Uncertainty): ", variance)
-    #
-    # mean = mean.cpu().detach()
-    # variance = variance.cpu().detach()
-    #
-    # # Visualize uncertainty
-    # print("Visualizing model uncertainty...")
-    # visualize_model_uncertainty(mean, variance)
-    # print("Model uncertainty visualizations saved as model_uncertainty_plots.png")
-
-    # # Additional uncertainty metrics
-    # print("Uncertainty Analysis:")
-    # print(f"Total Variance: {variance.mean().item():.4f}")
-    # print(f"Max Variance: {variance.max().item():.4f}")
-    # print(f"Min Variance: {variance.min().item():.4f}")
 
     del train_loader, val_loader, test_loader, model

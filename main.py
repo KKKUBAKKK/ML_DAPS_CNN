@@ -7,7 +7,7 @@ from train import train_model, evaluate_model, mc_dropout_predictions, plot_unce
 import numpy as np
 
 # Main function to train, evaluate, and save the model
-def main(train, evaluate, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="model.pth"):
+def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="model.pth"):
     # Prepare data loaders (from previous steps)
     train_loader, val_loader, test_loader = create_dataloaders(data_dir, batch_size=batch_size)
 
@@ -42,27 +42,15 @@ def main(train, evaluate, data_dir, num_epochs=25, batch_size=32, learning_rate=
     num_samples = 2  # Liczba próbek Monte Carlo (samples powinno byc [10 - 20]), dropout powinien byc w [0.2 - 0.5]
     print("Starting Monte Carlo Dropout evaluation...")
 
-    if evaluate:
-        # Evaluate on the test set
-        print("Evaluating on test set...")
-        criterion = nn.CrossEntropyLoss()
+    # Evaluate on the test set
+    print("Evaluating on test set...")
+    criterion = nn.CrossEntropyLoss()
 
-        test_loss, test_acc = evaluate_model(model, test_loader, criterion, device)
-        print(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.4f}")
-
-    # ensemble_models = [SpectrogramCNN(num_classes=2) for _ in range(5)]
-    # train_ensemble(ensemble_models, train_loader, val_loader, num_epochs=25, learning_rate=0.001)
-    # ensemble_outputs = ensemble_predictions(ensemble_models, inputs)
-    # ensemble_mean = ensemble_outputs.mean(dim=0)
-    # ensemble_std = ensemble_outputs.std(dim=0)
-    # print("Ensemble Mean:", ensemble_mean)
-    # print("Ensemble Std Dev:", ensemble_std)
-
-
-# Function for creating plots for monte carlo task
+    test_loss, test_acc = evaluate_model(model, test_loader, criterion, device)
+    print(f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.4f}")
 
 
 # Call the main function with your dataset path
 if __name__ == "__main__":
     data_dir = Path("./data/spectrograms")  # Update this to your dataset path
-    main(False, False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="best_cnn.pth")
+    main(False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="best_cnn.pth")
