@@ -10,3 +10,6 @@
 __pycache__/
 /checkpoint1_best_cnn.pth
 /best_cnn.pth
+
+*.png
+*.pth
