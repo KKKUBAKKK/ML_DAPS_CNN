@@ -3,6 +3,7 @@ import torch.nn as nn
 from pathlib import Path
 from dataset import create_dataloaders
 from cnn import SpectrogramCNN
+from modified_cnn import ModifiedSpectrogramCNN
 from train import train_model, evaluate_model
 import numpy as np
 
@@ -23,7 +24,7 @@ def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, mod
         print("MPS device not found, using CPU")
 
     # Initialize model
-    model = SpectrogramCNN(num_classes=2)
+    model = ModifiedSpectrogramCNN(num_classes=2, activation='sigmoid')
 
     # Train the model
     if train:
@@ -50,4 +51,4 @@ def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, mod
 # Call the main function with your dataset path
 if __name__ == "__main__":
     data_dir = Path("./data/spectrograms")  # Update this to your dataset path
-    main(False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="cnns/best_cnn.pth")
+    main(True, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="cnns/best_cnn.pth")

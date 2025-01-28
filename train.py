@@ -11,10 +11,18 @@ from sklearn.metrics import f1_score
 MODEL_PATH = "./model.pth"
 LAST_MODEL_PATH = "./last_model.pth"
 
+def log_layer_parameters(model, epoch):
+    print(f"\nEpoch {epoch + 1} - Layer Parameter Norms:")
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            grad_norm = param.grad.norm().item() if param.grad is not None else 0.0
+            weight_norm = param.norm().item()
+            print(f"{name}: Weight Norm = {weight_norm:.4f}, Gradient Norm = {grad_norm:.4f}")
+
 def train_model(model, train_loader, val_loader, num_epochs=25, learning_rate=0.001, model_path=MODEL_PATH):
     # Define the loss function and optimizer
     criterion = nn.CrossEntropyLoss()  # For classification tasks
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 
     # Move model to GPU if available
     # For Mac
@@ -29,6 +37,8 @@ def train_model(model, train_loader, val_loader, num_epochs=25, learning_rate=0.
     # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model.to(device)
+
+    initial_params = {name: param.clone().detach() for name, param in model.named_parameters()}
 
     # Training loop
     best_val_acc = 0.0
@@ -66,6 +76,12 @@ def train_model(model, train_loader, val_loader, num_epochs=25, learning_rate=0.
         print(f"Ending epoch {epoch + 1}/{num_epochs} at {time.strftime('%H:%M:%S', time.localtime())}, "
               f"Train Loss: {epoch_loss:.4f}, Train Acc: {epoch_acc:.4f}, "
               f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}")
+
+        for name, param in model.named_parameters():
+            param_change = torch.norm(param - initial_params[name]).item()
+            print(f"Epoch {epoch + 1}, Layer {name}, Parameter Change: {param_change:.4f}")
+
+        log_layer_parameters(model, epoch)
 
         # Save the best model based on validation accuracy
         if val_acc > best_val_acc:
