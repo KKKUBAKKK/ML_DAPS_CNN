@@ -37,8 +37,3 @@ class SpectrogramCNN(nn.Module):
         x = self.fc2(x)  # Output: (batch_size, num_classes)
 
         return x
-
-
-# Example: Initialize the CNN
-# model = SpectrogramCNN(num_classes=2)
-# print(model)

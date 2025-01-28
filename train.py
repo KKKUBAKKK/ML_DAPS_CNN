@@ -3,6 +3,7 @@ import time
 import torch.optim as optim
 import torch.nn as nn
 import torch
+import numpy as np
 
 from sklearn.metrics import f1_score
 
@@ -108,7 +109,3 @@ def evaluate_model(model, data_loader, criterion, device):
     print(f"F1 Score: {f1:.4f}")
 
     return epoch_loss, epoch_acc
-
-
-# Example: Train the model
-# train_model(model, train_loader, val_loader, num_epochs=10, learning_rate=0.001)
