@@ -5,8 +5,6 @@ import librosa
 from pathlib import Path
 import noisereduce as nr
 
-from create_spectrograms import plot_spectrogram_and_save
-
 
 def remove_noise_from_directory(input_dir, output_dir, noise_clip_length=1.0,
                                 noise_reduction_type='stationary',
@@ -22,32 +20,7 @@ def remove_noise_from_wav(input_file, output_file=None,
                           noise_clip_length=1.0,  # seconds of noise to sample
                           noise_reduction_type='stationary',
                           prop_decrease=1.0):  # Amount of noise to reduce
-    """
-    Advanced noise reduction for WAV audio files using multiple techniques.
 
-    Parameters:
-    -----------
-    input_file : str
-        Path to the input .wav audio file
-    output_file : str, optional
-        Path to save the noise-reduced audio file.
-        If None, appends '_denoised' to the input filename.
-    noise_clip_length : float, optional (default=1.0)
-        Length of noise clip to sample from the beginning of the audio (in seconds)
-    noise_reduction_type : str, optional (default='stationary')
-        Type of noise reduction: 'stationary' or 'nonstationary'
-    prop_decrease : float, optional (default=1.0)
-        Proportion of noise to reduce (0-1 range)
-    n_std_thresh_stationary : float, optional (default=1.5)
-        Threshold for stationary noise reduction
-    n_std_thresh_nonstationary : float, optional (default=1.5)
-        Threshold for non-stationary noise reduction
-
-    Returns:
-    --------
-    numpy.ndarray
-        Noise-reduced audio time series
-    """
     # Load the audio file with original sample rate
     audio, sample_rate = sf.read(input_file)
 
@@ -88,8 +61,6 @@ def remove_noise_from_wav(input_file, output_file=None,
     # Determine output filename
     if output_file is None:
         output_file = input_file.rsplit('.', 1)[0] + '_denoised.wav'
-    # elif output_file.suffix == '.wav':
-    #     output_file = output_file.with_stem(output_file.stem + '_denoised')
 
     # Save the processed audio
     sf.write(output_file, reduced_audio, sample_rate)
@@ -103,21 +74,21 @@ def remove_noise_from_wav(input_file, output_file=None,
 if __name__ == "__main__":
     input_dir = Path('./data/audio')
     output_dir = Path('./data/audio_denoised')
-    # train0thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'train' / 'class_0', output_dir / 'train' / 'class_0'))
+    train0thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'train' / 'class_0', output_dir / 'train' / 'class_0'))
     train1thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'train' / 'class_1', output_dir / 'train' / 'class_1'))
     validate0thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'validation' / 'class_0', output_dir / 'validation' / 'class_0'))
     validate1thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'validation' / 'class_1', output_dir / 'validation' / 'class_1'))
     test0thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'test' / 'class_0', output_dir / 'test' / 'class_0'))
     test1thread = threading.Thread(target=remove_noise_from_directory(input_dir / 'test' / 'class_1', output_dir / 'test' / 'class_1'))
 
-    # train0thread.start()
+    train0thread.start()
     train1thread.start()
     validate0thread.start()
     validate1thread.start()
     test0thread.start()
     test1thread.start()
 
-    # train0thread.join()
+    train0thread.join()
     train1thread.join()
     print("Train done")
     validate0thread.join()

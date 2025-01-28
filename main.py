@@ -3,7 +3,7 @@ import torch.nn as nn
 from pathlib import Path
 from dataset import create_dataloaders
 from cnn import SpectrogramCNN
-from train import train_model, evaluate_model, mc_dropout_predictions, plot_uncertainty
+from train import train_model, evaluate_model
 import numpy as np
 
 # Main function to train, evaluate, and save the model
@@ -39,9 +39,6 @@ def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, mod
     model.load_state_dict(torch.load(model_save_path, weights_only=True))
     print(f"Best model loaded from {model_save_path}")
 
-    num_samples = 2  # Liczba próbek Monte Carlo (samples powinno byc [10 - 20]), dropout powinien byc w [0.2 - 0.5]
-    print("Starting Monte Carlo Dropout evaluation...")
-
     # Evaluate on the test set
     print("Evaluating on test set...")
     criterion = nn.CrossEntropyLoss()
@@ -53,4 +50,4 @@ def main(train, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, mod
 # Call the main function with your dataset path
 if __name__ == "__main__":
     data_dir = Path("./data/spectrograms")  # Update this to your dataset path
-    main(False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="best_cnn.pth")
+    main(False, data_dir, num_epochs=25, batch_size=32, learning_rate=0.001, model_save_path="cnns/best_cnn.pth")

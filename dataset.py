@@ -54,8 +54,3 @@ def create_dataloaders(data_dir: Path, batch_size=32, img_size=(224, 224)):
     }
 
     return dataloaders['train'], dataloaders['validation'], dataloaders['test']
-
-
-# Example usage:
-# data_dir = Path("path_to_spectrogram_dataset")  # Path to the dataset
-# train_loader, val_loader, test_loader = create_dataloaders(data_dir, batch_size=32, img_size=(224, 224))

@@ -1,13 +1,8 @@
-import os
 from pathlib import Path
 import shutil
-import random
 
-from fontTools.misc.classifyTools import classify
-
-from classify_audio import classify_audio
-from divide_by_scripts import divide_by_scripts
-from take_out_from_directories import take_out_from_directories
+from data_extraction.classify_audio import classify_audio
+from data_extraction.divide_by_scripts import divide_by_scripts
 
 
 def divide_daps_dataset(dataset_path, output_base_path, copy):

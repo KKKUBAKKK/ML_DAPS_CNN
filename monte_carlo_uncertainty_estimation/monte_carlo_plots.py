@@ -56,14 +56,9 @@ def plot_results(all_mean_probs, all_std_probs, all_labels):
     plt.show()
 
     # Optionally, compare predicted labels vs. true labels
-    # predicted class = argmax along axis 1
     predictions = torch.argmax(all_mean_probs, dim=1).cpu().numpy()
     accuracy = (predictions == labels_np).mean()
     print(f"Overall accuracy: {accuracy:.2%}")
-
-
-# Example usage:
-# plot_results(all_mean_probs, all_std_probs, all_labels)
 
 
 def load_mc_results(file_path):
@@ -73,14 +68,9 @@ def load_mc_results(file_path):
     all_labels = results['labels']
     return all_mean_probs, all_std_probs, all_labels
 
-# Loading example
-    # results = torch.load('mc_dropout_results.pth')
-    # all_mean_probs = results['mean_probs']
-    # all_std_probs = results['std_probs']
-    # all_labels = results['labels']
 
 if __name__ == "__main__":
-     all_means, all_std_probs, all_labels = load_mc_results('mc_dropout_results.pth')
+     all_means, all_std_probs, all_labels = load_mc_results('../mc_droput_results/mc_dropout_results.pth')
 
      # Show dimensions of the loaded data
      print(all_means.shape)

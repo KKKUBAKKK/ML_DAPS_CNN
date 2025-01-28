@@ -1,13 +1,10 @@
-from random import sample
-
-from create_spectrograms import plot_spectrogram_and_save, IMG_OUTPUT_PATH
-from adjustLength import extract_segments_from_audio
+from data_extraction.create_spectrograms import plot_spectrogram_and_save, process_daps_dataset
 import soundfile as sf
 from pathlib import Path
 
-TRAIN_IMG_OUTPUT_PATH = Path("./data/spectrograms/train")
-VALIDATION_IMG_OUTPUT_PATH = Path("./data/spectrograms/validation")
-TEST_IMG_OUTPUT_PATH = Path("./data/spectrograms/test")
+TRAIN_IMG_OUTPUT_PATH = Path("../data/spectrograms/train")
+VALIDATION_IMG_OUTPUT_PATH = Path("../data/spectrograms/validation")
+TEST_IMG_OUTPUT_PATH = Path("../data/spectrograms/test")
 
 TRAIN_AUDIO_PATH = Path("./data/audio/train")
 VALIDATION_AUDIO_PATH = Path("./data/audio/validation")
@@ -38,11 +35,11 @@ def save_spectrograms(dataset_path: Path, output_path: Path):
 
 
 if __name__ == "__main__":
-    # process_daps_dataset(TRAIN_AUDIO_PATH / "class_0_cleared_segments", TRAIN_IMG_OUTPUT_PATH / "class_0")
-    # process_daps_dataset(TRAIN_AUDIO_PATH / "class_1_cleared_segments", TRAIN_IMG_OUTPUT_PATH / "class_1")
+    process_daps_dataset(TRAIN_AUDIO_PATH / "class_0_cleared_segments", TRAIN_IMG_OUTPUT_PATH / "class_0")
+    process_daps_dataset(TRAIN_AUDIO_PATH / "class_1_cleared_segments", TRAIN_IMG_OUTPUT_PATH / "class_1")
 
     save_spectrograms(VALIDATION_AUDIO_PATH / "class_0_cleared_segments", VALIDATION_IMG_OUTPUT_PATH / "class_0")
     save_spectrograms(VALIDATION_AUDIO_PATH / "class_1_cleared_segments", VALIDATION_IMG_OUTPUT_PATH / "class_1")
 
-    # process_daps_dataset(TEST_AUDIO_PATH / "class_0_cleared_segments", TEST_IMG_OUTPUT_PATH / "class_0")
-    # process_daps_dataset(TEST_AUDIO_PATH / "class_1_cleared_segments", TEST_IMG_OUTPUT_PATH / "class_1")
+    process_daps_dataset(TEST_AUDIO_PATH / "class_0_cleared_segments", TEST_IMG_OUTPUT_PATH / "class_0")
+    process_daps_dataset(TEST_AUDIO_PATH / "class_1_cleared_segments", TEST_IMG_OUTPUT_PATH / "class_1")

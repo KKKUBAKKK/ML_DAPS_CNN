@@ -58,7 +58,7 @@ function from `divide_daps_dataset.py`:
 
 ```python
 from pathlib import Path
-from divide_daps_dataset import divide_daps_dataset
+from data_extraction.divide_daps_dataset import divide_daps_dataset
 
 dataset_path = Path("./daps")  # Replace with actual dataset path
 output_base_path = Path('data/audio')  # Output directory for split dataset
@@ -71,7 +71,7 @@ To remove noise from audio files in a directory, use the `remove_noise_from_dire
 
 ```python
 from pathlib import Path
-from remove_noise import remove_noise_from_directory
+from data_extraction.remove_noise import remove_noise_from_directory
 
 input_dir = Path('./data/audio')
 output_dir = Path('./data/audio_denoised')
@@ -86,7 +86,7 @@ To remove silence from audio files in a directory, use the `remove_silence_from_
 
 ```python
 from pathlib import Path
-from remove_silence_from_directory import remove_silence_from_directory
+from data_extraction.remove_silence_from_directory import remove_silence_from_directory
 
 input_dir = Path('./data/audio_denoised')
 output_dir = Path('./data/audio_silence_removed')
@@ -100,10 +100,10 @@ remove_silence_from_directory(input_dir / 'test', output_dir / 'test')
 To divide audio files into segments, use the `split_all_files` function from `ssplit_all_files.py`:
 
 ```python
-from pathlib import Path    
-from split_all_files import split_all_files
+from pathlib import Path
+from data_extraction.split_all_files import split_all_files
 import os
-    
+
 input_dir = Path('./data/audio_silence_removed')
 output_dir = Path('./data/audio_segments')
 
@@ -128,7 +128,7 @@ To generate spectrograms for audio files, use the `save_spectrograms` function f
 
 ```python
 from pathlib import Path
-from save_spectrograms import save_spectrograms
+from data_extraction.save_spectrograms import save_spectrograms
 import os
 
 dataset_path = Path('./data/audio_segments')

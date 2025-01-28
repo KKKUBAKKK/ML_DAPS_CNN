@@ -38,10 +38,6 @@ def plot_spectrogram_and_save(signal, fs, output_path: Path, fft_size=2048, hop_
         hop_length=hop_size,
         cmap="inferno",
     )
-    # plt.xlabel("Time [s]")
-    # plt.ylabel("Frequency [Hz]")
-    # plt.yticks(TICKS, TICK_LABELS)
-    # plt.colorbar(img, format="%+2.f dBFS")
 
     # Remove axes
     plt.gca().set_axis_off()
@@ -53,14 +49,7 @@ def plot_spectrogram_and_save(signal, fs, output_path: Path, fft_size=2048, hop_
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output_path, **SAVE_PARAMS)
-    #     output_path.with_stem(
-    #         f"{output_path.stem}_spectrogram_WINLEN={window_size}_HOPLEN={hop_size}_NFFT={fft_size}"
-    #     ),
-    #     **SAVE_PARAMS,
-    # )
     plt.close()
-
-    # print(f"Saved spectrogram to {output_path}")
 
 
 def process_daps_dataset(dataset_path: Path):

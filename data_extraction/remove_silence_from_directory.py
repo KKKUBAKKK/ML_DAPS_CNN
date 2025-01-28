@@ -1,7 +1,6 @@
 import os
-from remove_silence import remove_silence
-import argparse
-from pathlib import Path
+from data_extraction.remove_silence import remove_silence
+
 
 def remove_silence_from_directory(input_folder, output_folder, min_silence_len=500, silence_thresh=-40):
     # Create output folder if it doesn't exist
@@ -18,10 +17,5 @@ def remove_silence_from_directory(input_folder, output_folder, min_silence_len=5
     print(f"All files processed. Cleared files saved in: {output_folder}")
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser(description="Remove silence from an audio files in whole folder.")
-    # parser.add_argument("input_path", type=str, help="Path to the input WAV files folder.")
-    #
-    # args = parser.parse_args()
-
     remove_silence_from_directory('data/class_0')
     remove_silence_from_directory('data/class_1')
