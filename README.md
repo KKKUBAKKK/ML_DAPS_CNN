@@ -151,7 +151,7 @@ save_spectrograms(dataset_path / 'test' / 'class_1', output_path / 'test' / 'cla
 
 ### Model Training
 
-To train the model, use the `main` function from `main.py`:
+To train the model, use the `main` function from `main.py`. By default model architecture from `cnn.py` is used, but there is alternative version in `modified_cnn.py`, so you can modify main function to use it.
 
 ```python
 from main import main
